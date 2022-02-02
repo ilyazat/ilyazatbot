@@ -1,6 +1,12 @@
 #  Cinemabot - Genius Bot From Incredible @ilyazat
+
+
 Telegram bot for getting information about movie!
+
+
 /start - to start bot 
+
+
 /help - to call helper
 
 ## How to use
