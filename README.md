@@ -1,8 +1,8 @@
-#  Cinemabot - Telegram bot for getting information about movie!
-/start - start bot \
-/help - call helper
+#  Cinemabot - Genius Bot From Incredible @ilyazat
+Telegram bot for getting information about movie!
+/start - to start bot 
+/help - to call helper
 
 ## How to use
-enter name of the tv-show and then you'll get poster, title and description of the requested movie!
-![Screenshot](./pics/start.jpg)
-![Screenshot2](./pics/body.jpg)
+Enter name of the tv-show and then you'll get poster, title and description of the requested movie!
+![Screenshot](./pics/screen.png)
