@@ -6,17 +6,6 @@ from utils.notify_admins import on_startup_notify
 # TODO:
 #  - Deploy on AWS
 
-# TODO:
-#  - Code-architecture lol
-#  - Deploy on AWS
-#  - Add inline0-buttons
-#  - Cover bot with unit-tests
-#  - Add support of kinopoisk
-#  - Add distinguishing between languages to select API (only for russian: kinopoisk.ru)
-#  - Add fetching online video services by request
-#  - Add fetching of random movie-title and information about it ("I don't know what to watch!")
-
-
 
 async def on_startup(disp):
     await on_startup_notify(disp)

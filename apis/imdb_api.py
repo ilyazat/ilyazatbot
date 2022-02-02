@@ -37,7 +37,7 @@ class IMDbSession:
         self._apiKey = imdb_token
         self.language = language
 
-    async def search_by_expression_imdb(self, expression: str):
+    async def search_by_expression_imdb(self, expression: str) -> tp.Union[IMDbMovieInfo, None]:
         endpoint = imdb_url / self.language / "API" / "Search" / self._apiKey / expression
         async with aiohttp.ClientSession() as session:
             response = await session.get(endpoint, ssl=False)
@@ -47,8 +47,12 @@ class IMDbSession:
             return await self._get_nice_description_by_imdb_id(title_id=raw_movie_info.results[0].id,
                                                                session=session)
 
-    async def _get_nice_description_by_imdb_id(self, title_id: str, session: aiohttp.ClientSession) -> IMDbMovieInfo:
+    async def _get_nice_description_by_imdb_id(self, title_id: str, session: aiohttp.ClientSession) \
+            -> tp.Union[IMDbMovieInfo, None]:
         endpoint = imdb_url / self.language / "API" / "Title" / self._apiKey / title_id
         response = await session.get(endpoint, ssl=False)
         response_json = await response.json()
-        return IMDbMovieInfo.parse_obj(response_json)
+        try:
+            return IMDbMovieInfo.parse_obj(response_json)
+        except pydantic.ValidationError:
+            return None

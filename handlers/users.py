@@ -46,7 +46,7 @@ async def get_last_movie(message: types.Message):
 
 @dp.message_handler()
 async def movie_handler(message: types.Message):
-    imdb_result = await IMDbSession(imdb_token).search_by_expression_imdb(message.text)
+    imdb_result = await IMDbSession(imdb_token, language="ru").search_by_expression_imdb(message.text)
 
     if imdb_result:
         print(len(imdb_result.image))
