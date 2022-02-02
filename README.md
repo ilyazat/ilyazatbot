@@ -1,4 +1,4 @@
-#  Cinemabot - Genius Bot From Incredible @ilyazat
+#  Cinemabot - Genius Telegram Bot @cinemaastrbot
 
 
 Telegram bot for getting information about movie!
