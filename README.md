@@ -5,4 +5,5 @@ Telegram bot for getting information about movie!
 
 ## How to use
 Enter name of the tv-show and then you'll get poster, title and description of the requested movie!
+
 ![Screenshot](./pics/screen.png)
