@@ -36,16 +36,16 @@ class IMDbSession:
     def __init__(self, imdb_token: str, language: str = "en"):
         self._apiKey = imdb_token
         self.language = language
+        self.__session = aiohttp.ClientSession()
 
     async def search_by_expression_imdb(self, expression: str) -> tp.Union[IMDbMovieInfo, None]:
         endpoint = imdb_url / self.language / "API" / "Search" / self._apiKey / expression
-        async with aiohttp.ClientSession() as session:
-            response = await session.get(endpoint, ssl=False)
-            raw_movie_info = IMDbResponseData.parse_obj(await response.json())  # only title and description is year
-            if not raw_movie_info.results:
-                return None
-            return await self._get_nice_description_by_imdb_id(title_id=raw_movie_info.results[0].id,
-                                                               session=session)
+        response = await self.__session.get(endpoint, ssl=False)
+        raw_movie_info = IMDbResponseData.parse_obj(await response.json())  # only title and description is year
+        if not raw_movie_info.results:
+            return None
+        return await self._get_nice_description_by_imdb_id(title_id=raw_movie_info.results[0].id,
+                                                           session=self.__session)
 
     async def _get_nice_description_by_imdb_id(self, title_id: str, session: aiohttp.ClientSession) \
             -> tp.Union[IMDbMovieInfo, None]:

@@ -2,6 +2,7 @@ import sqlite3
 import typing as tp
 from datetime import datetime
 
+import aiohttp
 from pypika import Query, Table, Order
 
 

@@ -13,5 +13,5 @@ async def on_startup(disp):
 
 
 if __name__ == '__main__':
-    from handlers.users import dp
+    from handlers.movie_handler import dp
     executor.start_polling(dp, on_startup=on_startup)
