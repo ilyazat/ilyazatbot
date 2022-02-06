@@ -3,8 +3,6 @@ from utils.set_bot_commands import set_default_commands
 from utils.notify_admins import on_startup_notify
 
 
-# TODO:
-#  - Deploy on AWS
 
 
 async def on_startup(disp):
