@@ -52,6 +52,7 @@ class IMDbSession:
         endpoint = imdb_url / self.language / "API" / "Title" / self._apiKey / title_id
         response = await session.get(endpoint, ssl=False)
         response_json = await response.json()
+        await session.close()
         try:
             return IMDbMovieInfo.parse_obj(response_json)
         except pydantic.ValidationError:

@@ -15,17 +15,32 @@ class DataBaseHandler:
         """
         self.db_name = sql_db_name
 
-    def add_to_history(self, user_id: int, query: str, status: str, movie: str) -> tp.Any:
+    def add_to_history(self, user_id: int, query: str, status: str, movie: str):
         history = Table("history")
-        query = Query.into(history).columns("user_id", "date", "query", "status", history.movie)\
+        query = Query.into(history).columns("user_id", "date", "query", "status", history.movie) \
             .insert(user_id, datetime.now().strftime("%Y-%m-%d %H:%M:%S"), query, status, movie)
         return self._execute(query, commit=True)
 
-    def get_history_10(self, user_id: int) -> tuple:
+    def get_ok_queries(self, user_query: str):
+        history = Table("history")
+        query = Query.from_(history).select(history.query)\
+            .where(history.query == user_query)\
+            .where(history.status == "OK")
+        return self._execute(query, fetchall=True)
+
+    def get_movie_from_query(self, user_query: str) -> tuple:
+        history = Table("history")
+        query = Query.from_(history).select(history.movie) \
+            .where(history.query == user_query) \
+            .where(history.status == "OK")
+        return self._execute(query, fetchall=True)
+
+
+    def get_history_10(self, user_id: int):
         history = Table("history")
         query = Query.from_(history) \
             .select(history.date, history.movie) \
-            .where(history.user_id == user_id)\
+            .where(history.user_id == user_id) \
             .limit(10)
         return self._execute(query, fetchall=True)
 
@@ -33,11 +48,11 @@ class DataBaseHandler:
         history = Table("history")
         query = Query.from_(history) \
             .select(history.movie) \
-            .where(history.user_id == user_id)\
+            .where(history.user_id == user_id) \
             .orderby("date", order=Order.desc)
         return self._execute(query, fetchone=True)[0]
 
-    def _execute(self, query: Query, fetchone=False, fetchall=False, commit=False) -> tp.Any:
+    def _execute(self, query: Query, fetchone=False, fetchall=False, commit=False):
         connection = sqlite3.connect(self.db_name)
         cursor = connection.cursor()
         cursor.execute(str(query))
