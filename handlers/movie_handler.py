@@ -16,8 +16,9 @@ async def movie_handler(message: types.Message):
     if imdb_result:
         reply = f"<b>Title</b>:\n{imdb_result.fullTitle}\n\n" \
                 f"<b>Type</b>:\n{imdb_result.type}\n\n" \
-                f"<b>Plot</b>:\n{imdb_result.plot}\n\n" \
-                f"<b>IMDb Rating</b>:\n{float(imdb_result.imDbRating)} {math.ceil(float(imdb_result.imDbRating)) * '⭐'}"
+                f"<b>Plot</b>:\n{imdb_result.plot}\n\n"
+        if imdb_result.imDbRating:
+            reply += f"<b>IMDb Rating</b>:\n{float(imdb_result.imDbRating)} {math.ceil(float(imdb_result.imDbRating)) * '⭐'}"
 
         try:
             await bot.send_photo(message.from_user.id,
