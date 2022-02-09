@@ -43,7 +43,10 @@ class IMDbSession:
         response = await self.__session.get(endpoint, ssl=False)
         raw_movie_info = IMDbResponseData.parse_obj(await response.json())  # only title and description is year
         if not raw_movie_info.results:
-            return None
+            try:
+                return None
+            finally:
+                await self.__session.close()
         return await self._get_nice_description_by_imdb_id(title_id=raw_movie_info.results[0].id,
                                                            session=self.__session)
 
@@ -52,8 +55,9 @@ class IMDbSession:
         endpoint = imdb_url / self.language / "API" / "Title" / self._apiKey / title_id
         response = await session.get(endpoint, ssl=False)
         response_json = await response.json()
-        await session.close()
         try:
             return IMDbMovieInfo.parse_obj(response_json)
         except pydantic.ValidationError:
             return None
+        finally:
+            await session.close()

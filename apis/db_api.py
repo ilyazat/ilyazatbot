@@ -84,9 +84,9 @@ class Postgres:
         self.users = Table("users")
         self.movie = Table("movie")
 
-    def add_to_history(self, message: types.Message, status: bool, movie_id: str):
-        add_to_test1 = PostgreSQLQuery.into(self.requests).\
-            columns("user_id", "date", "query_text", "status", "movie_id").\
+    def add_to_history(self, message: types.Message, status: bool, movie_id: str) -> None:
+        add_to_test1 = PostgreSQLQuery.into(self.requests). \
+            columns("user_id", "date", "query_text", "status", "movie_id"). \
             insert(message.from_user.id, datetime.now().strftime("%Y-%m-%d %H:%M:%S"), message.text, status, movie_id)
         self._execute(add_to_test1, commit=True)
         add_to_users = PostgreSQLQuery.into(self.users) \
@@ -95,35 +95,38 @@ class Postgres:
             .do_update(self.users.name, message.from_user.first_name)
         self._execute(add_to_users, commit=True)
 
-    def cash_movie(self, info: IMDbMovieInfo):
-        pass
-        # add_movie = PostgreSQLQuery.into(self.movie) \
-        #     .insert(info.id,
-        #             info.fullTitle,
-        #             info.type,
-        #             info.plot,
-        #             info.image,
-        #             info.imDbRating)
-        # self._execute(add_movie, commit=True)
+    # def cash_movie(self, info: IMDbMovieInfo):
+    #     add_movie = PostgreSQLQuery.into(self.movie) \
+    #         .insert(info.id,
+    #                 info.fullTitle,
+    #                 info.type,
+    #                 info.plot,
+    #                 info.image,
+    #                 info.imDbRating)
+    #     self._execute(add_movie, commit=True)
+    #
+    # def get_cash(self, req: str):
+    #     query = PostgreSQLQuery.from_(self.requests) \
+    #         .where(req == self.requests.query_text) \
+    #         .where(self.requests.status == True)\
+    #         .select(self.requests.movie_id)\
+    #         .inner_join(self.movie).on(self.requests.movie_id == self.movie.id)
 
-    def get_cash(self, title_id: str):
-        pass
-        # query = PostgreSQLQuery.from_(self.movie) \
-        #                         .select().where(self.movie.id == title_id)
-        # raw = self._execute(query, fetchall=True)
-        # return IMDbMovieInfo.parse_obj({
-        #     self.movie.id: raw[0],
-        #     self.movie.title: raw[1],
-        #     self.movie.type: raw[2],
-        #
-        # })
 
-    def get_queries(self):
-        pass
+    # def get_queries_list(self):
+    #     query = PostgreSQLQuery.from_(self.requests).select(self.requests.query_text)
+    #     return [q[0] for q in self._execute(query, fetchall=True)]
 
     def get_users(self):
         users = Table("users")
         return self._execute(PostgreSQLQuery.from_(users).select(users.user_id))
+
+    def get_history_10(self, user_id: int):
+        query = PostgreSQLQuery.from_(self.requests) \
+            .select(self.requests.date, self.requests.query_text) \
+            .where(self.requests.user_id == user_id) \
+            .limit(10)
+        return self._execute(query, fetchall=True)
 
     def _execute(self, query: PostgreSQLQuery, fetchone=False, fetchall=False, commit=False):
         connection = psycopg2.connect(host=self.host,
@@ -131,7 +134,6 @@ class Postgres:
                                       password=self.password,
                                       database=self.db_name)
         cursor = connection.cursor()
-        print("connected")
         cursor.execute(str(query))
         data = None
         if commit:

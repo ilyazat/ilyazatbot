@@ -1,5 +1,5 @@
 import math
-
+from itertools import chain
 from aiogram import types, utils
 from datetime import datetime
 
@@ -7,8 +7,10 @@ from loader import dp, bot, db
 from data.config import imdb_token
 from apis.imdb_api import IMDbSession
 
+
 @dp.message_handler()
 async def movie_handler(message: types.Message):
+
     start = datetime.now()
     imdb_result = await IMDbSession(imdb_token, language="ru").search_by_expression_imdb(message.text)
     if imdb_result:
@@ -22,7 +24,6 @@ async def movie_handler(message: types.Message):
                                  imdb_result.image,
                                  caption=reply)
             db.add_to_history(message, True, imdb_result.id)
-            print(imdb_result.image)
             return
         except utils.exceptions.WrongFileIdentifier:
             await bot.send_message(message.from_user.id, reply)
@@ -31,11 +32,12 @@ async def movie_handler(message: types.Message):
             await bot.send_document(message.from_user.id, imdb_result.image)
             await bot.send_message(message.from_user.id, reply)
             return
-        except Exception as e:
-            db.add_to_history(message, False)
-            await bot.send_message(75064783, f"we have a problem: {e}")
+        # except Exception as e:
+        #     db.add_to_history(message, False)
+        #     await bot.send_message(75064783, f"we have a problem: {e}")
         finally:
             print(datetime.now() - start)
     else:
         await message.reply("Sorry, the movie couldn't be found")
         return
+
