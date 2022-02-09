@@ -7,6 +7,6 @@ from apis.db_api import DataBaseHandler, Postgres
 bot = Bot(token=config.BOT_TOKEN, parse_mode=types.ParseMode.HTML)
 admin = config.admin
 dp = Dispatcher(bot)
-db = Postgres("tg", "123")
+db = Postgres("tg", config.postgres_password)
 imdb_token = config.imdb_token
 
