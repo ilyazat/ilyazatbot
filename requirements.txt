@@ -4,3 +4,4 @@ pypika==0.48.8
 pydantic==1.9.0
 yarl==1.7.2
 python-dotenv
+psycopg2==2.9.3
