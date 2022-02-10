@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  bot:
+    build: ./ilyazatbot
+    command: python3 app.py
+    depends_on:
+      - db
+    environment:
+      - DB_PASSWORD=newpassword
+
+  db:
+    restart: always
+    image: postgres:latest
+    volumes:
+    - ./.database/postgres/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=newpassword
+    ports:
+      - 5436:5432
